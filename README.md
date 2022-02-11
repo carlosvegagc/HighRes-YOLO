@@ -1,5 +1,5 @@
 # HighRes-Yolo
-Model for using the YOLO core in its version 3 and 4 for object detection on large models. Works by including a previous and posterior layers for image slicing and recombination.
+Model for using the YOLO core in its version 3 and 4 for object detection on large images. Works by including a previous and posterior layers for image slicing and recombination.
 
 ## General Info
 
