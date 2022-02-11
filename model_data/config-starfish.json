@@ -1,0 +1,17 @@
+{
+    "model" : {
+        "name":           "starfish",
+        
+        "anchors":        [[[20,  19], [32, 25], [35, 35]],
+                           [[43,  32], [45, 45], [58, 53]],
+                           [[67,  40], [79, 62], [98, 85]]]
+    },
+
+    "data" : {
+        "train":           "../DATA/process_tmp_folder/txt/train_list.txt",
+        "test":            "../DATA/process_tmp_folder/txt/test_list.txt",
+        "weights":         "./model_data/yolov4.weights",
+        "classesOrig":     "./model_data/coco.names"
+    }
+
+}
