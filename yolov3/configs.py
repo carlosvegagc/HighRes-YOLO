@@ -31,11 +31,11 @@ YOLO_MAX_BBOX_PER_SCALE = 100
 YOLO_INPUT_SIZE = 416
 
 
-#if YOLO_TYPE == "yolov4":
+# if YOLO_TYPE == "yolov4":
 #    YOLO_ANCHORS = [[[12,  16], [19,   36], [40,   28]],
 #                    [[36,  75], [76,   55], [72,  146]],
 #                    [[142, 110], [192, 243], [459, 401]]]
-#if YOLO_TYPE == "yolov3":
+# if YOLO_TYPE == "yolov3":
 #    YOLO_ANCHORS = [[[13,  31], [21,   42], [31,   15]],
 #                    [[34,  58], [51,   29], [57,   98]],
 #                    [[78,  48], [150, 118], [255, 322]]]
@@ -54,7 +54,7 @@ TRAIN_LOGDIR = "log"
 TRAIN_CHECKPOINTS_FOLDER = "checkpoints"
 #TRAIN_MODEL_NAME = f"{YOLO_TYPE}_custom"
 
-TRAIN_LOAD_IMAGES_TO_RAM = True  # With True faster training, but need more RAM
+TRAIN_LOAD_IMAGES_TO_RAM = False  # With True faster training, but need more RAM
 TRAIN_BATCH_SIZE = 4
 TRAIN_INPUT_SIZE = 416
 TRAIN_DATA_AUG = True
