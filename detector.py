@@ -22,7 +22,7 @@ print(device_lib.list_local_devices())
 
 
 def train(config):
-    global TRAIN_FROM_CHECKPOINT
+    TRAIN_FROM_CHECKPOINT = True
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
     print(f'GPUs {gpus}')
@@ -45,16 +45,16 @@ def train(config):
     total_steps = TRAIN_EPOCHS * steps_per_epoch
 
     if TRAIN_TRANSFER:
-        
+
         Darknet = Create_Yolo(input_size=YOLO_INPUT_SIZE,
-                              classes=config["model"]["classesOrig"], anchors = config["model"]["anchors"])
+                              classes=config["model"]["classesOrig"], anchors=config["model"]["anchors"])
         # use darknet weights
         load_yolo_weights(Darknet, config["data"]["weights"])
-        
+
     # Create YOLO model
     yolo = Create_Yolo(input_size=YOLO_INPUT_SIZE,
-                       training=True, classes=config["model"]["classes"], anchors = config["model"]["anchors"])
-   
+                       training=True, classes=config["model"]["classes"], anchors=config["model"]["anchors"])
+
     if TRAIN_FROM_CHECKPOINT:
         try:
             model_name = config["model"]["name"]
@@ -72,19 +72,19 @@ def train(config):
                 except:
                     print("skipping", yolo.layers[i].name)
 
-
     optimizer = tf.keras.optimizers.Adam()
 
     def train_step(image_data, target):
-        with tf.GradientTape() as tape: 
+        with tf.GradientTape() as tape:
             pred_result = yolo(image_data, training=True)
-            giou_loss=conf_loss=prob_loss=0
+            giou_loss = conf_loss = prob_loss = 0
 
             # optimizing process
             grid = 3 if not TRAIN_YOLO_TINY else 2
             for i in range(grid):
                 conv, pred = pred_result[i*2], pred_result[i*2+1]
-                loss_items = compute_loss(pred, conv, *target[i], i, classes=config["model"]["classes"])
+                loss_items = compute_loss(
+                    pred, conv, *target[i], i, classes=config["model"]["classes"])
                 giou_loss += loss_items[0]
                 conf_loss += loss_items[1]
                 prob_loss += loss_items[2]
@@ -97,7 +97,7 @@ def train(config):
             # update learning rate
             # about warmup: https://arxiv.org/pdf/1812.01187.pdf&usg=ALkJrhglKOPDjNt6SHGbphTHyMcT0cuMJg
             global_steps.assign_add(1)
-            if global_steps < warmup_steps:# and not TRAIN_TRANSFER:
+            if global_steps < warmup_steps:  # and not TRAIN_TRANSFER:
                 lr = global_steps / warmup_steps * TRAIN_LR_INIT
             else:
                 lr = TRAIN_LR_END + 0.5 * (TRAIN_LR_INIT - TRAIN_LR_END)*(
@@ -107,12 +107,15 @@ def train(config):
             # writing summary data
             with writer.as_default():
                 tf.summary.scalar("lr", optimizer.lr, step=global_steps)
-                tf.summary.scalar("loss/total_loss", total_loss, step=global_steps)
-                tf.summary.scalar("loss/giou_loss", giou_loss, step=global_steps)
-                tf.summary.scalar("loss/conf_loss", conf_loss, step=global_steps)
-                tf.summary.scalar("loss/prob_loss", prob_loss, step=global_steps)
+                tf.summary.scalar("loss/total_loss",
+                                  total_loss, step=global_steps)
+                tf.summary.scalar("loss/giou_loss",
+                                  giou_loss, step=global_steps)
+                tf.summary.scalar("loss/conf_loss",
+                                  conf_loss, step=global_steps)
+                tf.summary.scalar("loss/prob_loss",
+                                  prob_loss, step=global_steps)
             writer.flush()
-
 
         return global_steps.numpy(), optimizer.lr.numpy(), giou_loss.numpy(), conf_loss.numpy(), prob_loss.numpy(), total_loss.numpy()
 
@@ -139,7 +142,7 @@ def train(config):
 
     # create second model to measure mAP
     mAP_model = Create_Yolo(input_size=YOLO_INPUT_SIZE,
-                            classes=config["model"]["classes"], anchors = config["model"]["anchors"])
+                            classes=config["model"]["classes"], anchors=config["model"]["anchors"])
 
     best_val_loss = 1000  # should be large at start
     for epoch in range(TRAIN_EPOCHS):

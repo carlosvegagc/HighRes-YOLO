@@ -290,10 +290,11 @@ def slice_single_image(image_path, out_name, out_dir_images,
                 skimage.io.imsave(outpath, window_c, check_contrast=False)
             else:
                 print("outpath {} exists, skipping".format(outpath))
+    if verbose:
+        print("Num slices:", n_ims,
+              "sliceHeight", sliceHeight, "sliceWidth", sliceWidth)
+        print("Time to slice", image_path, time.time()-t0, "seconds")
 
-    print("Num slices:", n_ims,
-          "sliceHeight", sliceHeight, "sliceWidth", sliceWidth)
-    print("Time to slice", image_path, time.time()-t0, "seconds")
     return
 
 
