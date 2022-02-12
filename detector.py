@@ -22,7 +22,7 @@ print(device_lib.list_local_devices())
 
 
 def train(config):
-    TRAIN_FROM_CHECKPOINT = True
+    global TRAIN_FROM_CHECKPOINT
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
     print(f'GPUs {gpus}')
